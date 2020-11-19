@@ -111,7 +111,6 @@ def procline(datastr):
     outstr = outstr + stan  + '\t' + adresa + '\t'
     outstr = outstr + statfnd + '\t' + actkinds + '\t' + kerivn + '\t'
     outstr = outstr + zasnov + '\t' + cont1 + '\t' + cont2  + '\t' + cont3 + '\t' + 'Дані ЄДР від ' + datasetdate
-    outstr = outstr.replace('\n', '')
     return outstr
 
 
