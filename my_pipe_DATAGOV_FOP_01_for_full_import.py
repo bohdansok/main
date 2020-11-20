@@ -31,7 +31,7 @@ datasetdate = '13.11.2020' #  !! Change according to actual date of the dataset
 titlestr = "ПІБ" + '\t' + "Дата_засн" + '\t' + "Дата_лікв" + '\t'
 titlestr = titlestr + "Стан"  + '\t' + "Адреса" + '\t'
 titlestr = titlestr + "КВЕД" + '\t' + "Контакт1" + '\t' + "Контакт2"  + '\t'
-titlestr = titlestr + "Контакт3" + '\t' + "Коментар_дата_ЄДР"
+titlestr = titlestr + "Контакт3" + '\t' + "Email_1"  + '\t' + "Email_2"  + '\t' + "Email_3" + '\t' + "Коментар_дата_ЄДР"
 curstr = ''
 curstrout = ''
 ##reccnt = 0
@@ -52,8 +52,11 @@ def procline(datastr):
     cont1 = ''
     cont2 = ''
     cont3 = ''
-    ##
-    datastr = datastr.replace('\n', '').replace('&apos;', "'")
+    email1 = ''
+    email2 = ''
+    email3 = ''
+##  Temp variables  
+    datastr = datastr.replace('\n', '').replace('&apos;', "'").replace('\r', '')
     datastr = datastr.replace('&quot;', '"').replace('\t', '')
     tempstr = str(datastr.partition(actkinds_st)[2])
     actkinds = str(tempstr.partition(actkinds_nd)[0]).replace('<ACTIVITY_KIND><CODE>', 'КВЕД ')
@@ -76,22 +79,32 @@ def procline(datastr):
     contacts = str(tempstr.partition(cont_nd)[0])
     contacts = contacts.replace(' ', '').replace('-', '').replace('(', '')
     contacts = contacts.replace(')', '').replace('+', '')
-    if contacts.find(';') != -1:
+    if tfind(contacts, ';'):
         cont1 = str(contacts.partition(';')[0])
         cont2 = str(str(contacts.partition(';')[2]).partition(';')[0])
         cont3 = str(str(str(contacts.partition(';')[2]).partition(';')[2]).partition(';')[0])
-    if contacts.find(',') != -1:
+    if tfind(contacts, ','):
         cont1 = str(contacts.partition(',')[0])
         cont2 = str(str(contacts.partition(',')[2]).partition(',')[0])
         cont3 = str(str(str(contacts.partition(',')[2]).partition(',')[2]).partition(',')[0])
-    cont1 = cont1.replace(',', '').replace(';', '').replace(' ', '')
-    cont2 = cont2.replace(',', '').replace(';', '').replace(' ', '')
-    cont3 = cont3.replace(',', '').replace(';', '').replace(' ', '')
+    cont1 = cont1.replace(',', '').replace(';', '')
+    if tfind(cont1, '@'):
+        email1 = cont1
+        cont1 = ''
+    cont2 = cont2.replace(',', '').replace(';', '')
+    if tfind(cont2, '@'):
+        email2 = cont2
+        cont2 = ''
+    cont3 = cont3.replace(',', '').replace(';', '')
+    if tfind(cont3, '@'):
+        email3 = cont3
+        cont3 = ''
 #
 #
     outstr = name + '\t' + stdate + '\t' + termdate + '\t'
     outstr = outstr + stan  + '\t' + adresa + '\t'
-    outstr = outstr + actkinds + '\t' + cont1 + '\t' + cont2  + '\t' + cont3 + '\t' + 'Дані ЄДР від ' + datasetdate
+    outstr = outstr + actkinds + '\t' + cont1 + '\t' + cont2  + '\t' + cont3 + '\t'
+    outstr = outstr + email1 + '\t' + email2 + '\t' + email3 + '\t' + 'Дані ЄДР від ' + datasetdate
     return outstr
 
 print('XML-файл з ЄДР ФОП має бути у тому ж каталозі, що й файл програми!')

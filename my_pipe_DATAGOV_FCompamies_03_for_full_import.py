@@ -40,7 +40,8 @@ datasetdate = '13.11.2020' #  !! Change according to actual date of the dataset
 titlestr = "ЄДРПОУ" + '\t' + "Назва" + '\t' + "ОПФ" + '\t' + "Дата_засн" + '\t' + "Дата_лікв" + '\t'
 titlestr = titlestr + "Стан"  + '\t' + "Адреса" + '\t'
 titlestr = titlestr + "Стат_фонд" + '\t' + "КВЕД" + '\t' + "Керівник" + '\t'
-titlestr = titlestr + "Засновник" + '\t' + "Контакт1" + '\t' + "Контакт2"  + '\t' + "Контакт3" + '\t' + "Коментар_дата_ЄДР"
+titlestr = titlestr + "Засновник" + '\t' + "Контакт1" + '\t' + "Контакт2"  + '\t' + "Контакт3" + '\t'
+titlestr = titlestr + "Email_1"  + '\t' + "Email_2"  + '\t' + "Email_3" + '\t' +"Коментар_дата_ЄДР"
 curstr = ''
 curstrout = ''
 i = 0
@@ -57,7 +58,14 @@ def tfind(where, what):  # returns True if contains, False - if doesn't
 
 
 def procline(datastr):
-    datastr = datastr.replace('\t', '').replace('\n', '')
+    cont1 = ''
+    cont2 = ''
+    cont3 = ''
+    email1 = ''
+    email2 = ''
+    email3 = ''
+##  Temp variables  
+    datastr = datastr.replace('\t', '').replace('\n', '').replace('\r', '')
     datastr = datastr.replace('&quot;', '"').replace('&apos;', "'")
     tempstr = str(datastr.partition(edrpo_st)[2])
     edrpo = str(tempstr.partition(edrpo_nd)[0])
@@ -79,7 +87,6 @@ def procline(datastr):
     stdate = str(tempstr.partition(stdate_nd)[0])
     tempstr = str(datastr.partition(statut_st)[2])
     statfnd = str(tempstr.partition(statut_nd)[0])
-######
     tempstr = str(datastr.partition(opf_st)[2])
     opf = str(tempstr.partition(opf_nd)[0])
     tempstr = str(datastr.partition(adr_st)[2])
@@ -93,21 +100,31 @@ def procline(datastr):
     contacts = str(tempstr.partition(cont_nd)[0])
     contacts = contacts.replace(' ', '').replace('-', '').replace('(', '')
     contacts = contacts.replace(')', '').replace('+', '')
-    if contacts.find(';') != -1:
+    if tfind(contacts, ';'):
         cont1 = str(contacts.partition(';')[0])
         cont2 = str(str(contacts.partition(';')[2]).partition(';')[0])
         cont3 = str(str(str(contacts.partition(';')[2]).partition(';')[2]).partition(';')[0])
-    if contacts.find(',') != -1:
+    if tfind(contacts, ','):
         cont1 = str(contacts.partition(',')[0])
         cont2 = str(str(contacts.partition(',')[2]).partition(',')[0])
         cont3 = str(str(str(contacts.partition(',')[2]).partition(',')[2]).partition(',')[0])
-    cont1 = cont1.replace(',', '').replace(';', '').replace(' ', '')
-    cont2 = cont2.replace(',', '').replace(';', '').replace(' ', '')
-    cont3 = cont3.replace(',', '').replace(';', '').replace(' ', '')
+    cont1 = cont1.replace(',', '').replace(';', '')
+    if tfind(cont1, '@'):
+        email1 = cont1
+        cont1 = ''
+    cont2 = cont2.replace(',', '').replace(';', '')
+    if tfind(cont2, '@'):
+        email2 = cont2
+        cont2 = ''
+    cont3 = cont3.replace(',', '').replace(';', '')
+    if tfind(cont3, '@'):
+        email3 = cont3
+        cont3 = ''
     outstr = edrpo + '\t' + name + '\t' + opf + '\t' + stdate + '\t' + termdate + '\t'
     outstr = outstr + stan  + '\t' + adresa + '\t'
     outstr = outstr + statfnd + '\t' + actkinds + '\t' + kerivn + '\t'
-    outstr = outstr + zasnov + '\t' + cont1 + '\t' + cont2  + '\t' + cont3 + '\t' + 'Дані ЄДР від ' + datasetdate
+    outstr = outstr + zasnov + '\t' + cont1 + '\t' + cont2  + '\t' + cont3 + '\t'
+    outstr = outstr + email1 + '\t' + email2 + '\t' + email3 + '\t' + 'Дані ЄДР від ' + datasetdate
     return outstr
 
 
