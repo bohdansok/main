@@ -1,2 +1,2 @@
-# main A square roots calculation with all checks.
-# But not only.
+# You'd better took a look at my Face Recognitin app
+https://github.com/bohdansok/Face_Recognition
